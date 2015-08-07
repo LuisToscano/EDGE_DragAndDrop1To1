@@ -15,6 +15,7 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
       
       Symbol.bindSymbolAction(compId, symbolName, "creationComplete", function(sym, e) {
          // Insertar código para ejecutarse cuando el símbolo se crea aquí
+         inicializarTimer(sym, "TIMER_CONTAINER");
          inicializarDragAndDrop(sym);
 
       });
@@ -23,6 +24,20 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
       Symbol.bindElementAction(compId, symbolName, "${Submit}", "click", function(sym, e) {
          // introducir aquí código para clic de ratón
          checkAnswersDragAndDrop(sym);
+
+      });
+      //Edge binding end
+
+      Symbol.bindElementAction(compId, symbolName, "${DRAG_1}", "click", function(sym, e) {
+         // introducir aquí código para clic de ratón
+         startTimer(sym, "TIMER_CONTAINER");
+
+      });
+      //Edge binding end
+
+      Symbol.bindElementAction(compId, symbolName, "${DRAG_2}", "click", function(sym, e) {
+         // introducir aquí código para clic de ratón
+         startTimer(sym, "TIMER_CONTAINER");
 
       });
       //Edge binding end
@@ -69,5 +84,27 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
    
    })("Submit");
    //Edge symbol end:'Submit'
+
+   //=========================================================
+   
+   //Edge symbol: 'TIMER_CONTAINER'
+   (function(symbolName) {   
+   
+      Symbol.bindTriggerAction(compId, symbolName, "Default Timeline", 500, function(sym, e) {
+         // introducir código aquí
+         sym.stop();
+
+      });
+      //Edge binding end
+
+      Symbol.bindTriggerAction(compId, symbolName, "Default Timeline", 0, function(sym, e) {
+         // introducir código aquí
+         sym.stop();
+
+      });
+      //Edge binding end
+
+   })("TIMER_CONTAINER");
+   //Edge symbol end:'TIMER_CONTAINER'
 
 })(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-6342212");

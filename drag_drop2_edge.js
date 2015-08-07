@@ -20,7 +20,8 @@
             js+"jquery-ui-1.10.4.custom.js",
             js+"jquery-ui-1.10.4.custom.min.js",
             js+"dragAndDropUtilities.js",
-            js+"interactionUtilities.js"
+            js+"interactionUtilities.js",
+            js+"timerUtilities.js"
         ],
         symbols = {
             "stage": {
@@ -62,7 +63,7 @@
                             id: 'DRAG_1',
                             symbolName: 'DRAG_1',
                             type: 'rect',
-                            rect: ['101', '103', '94', '81', 'auto', 'auto'],
+                            rect: ['101px', '103', '94', '81', 'auto', 'auto'],
                             cursor: 'pointer'
                         },
                         {
@@ -70,6 +71,12 @@
                             symbolName: 'Submit',
                             type: 'rect',
                             rect: ['264', '445', '165', '38', 'auto', 'auto']
+                        },
+                        {
+                            id: 'TIMER_CONTAINER',
+                            symbolName: 'TIMER_CONTAINER',
+                            type: 'rect',
+                            rect: ['499', '0', '197', '38', 'auto', 'auto']
                         }
                     ],
                     style: {
@@ -86,16 +93,6 @@
                     autoPlay: true,
                     data: [
                         [
-                            "eid12",
-                            "background-image",
-                            0,
-                            0,
-                            "linear",
-                            "${Stage}",
-                            [270,[['rgba(255,255,255,1.00)',0],['rgba(237,232,198,0.85)',99]]],
-                            [270,[['rgba(255,255,255,1.00)',0],['rgba(237,232,198,0.85)',99]]]
-                        ],
-                        [
                             "eid11",
                             "background-color",
                             0,
@@ -106,16 +103,6 @@
                             'rgba(255,255,255,1)'
                         ],
                         [
-                            "eid14",
-                            "width",
-                            0,
-                            0,
-                            "linear",
-                            "${Stage}",
-                            '696px',
-                            '696px'
-                        ],
-                        [
                             "eid13",
                             "height",
                             0,
@@ -124,6 +111,26 @@
                             "${Stage}",
                             '508px',
                             '508px'
+                        ],
+                        [
+                            "eid12",
+                            "background-image",
+                            0,
+                            0,
+                            "linear",
+                            "${Stage}",
+                            [270,[['rgba(255,255,255,1.00)',0],['rgba(237,232,198,0.85)',99]]],
+                            [270,[['rgba(255,255,255,1.00)',0],['rgba(237,232,198,0.85)',99]]]
+                        ],
+                        [
+                            "eid14",
+                            "width",
+                            0,
+                            0,
+                            "linear",
+                            "${Stage}",
+                            '696px',
+                            '696px'
                         ]
                     ]
                 }
@@ -170,10 +177,10 @@
                 content: {
                     dom: [
                         {
-                            rect: ['0px', '0px', '256px', '138px', 'auto', 'auto'],
+                            type: 'rect',
                             id: 'Rectangle2',
                             stroke: [0, 'rgb(0, 0, 0)', 'none'],
-                            type: 'rect',
+                            rect: ['0px', '0px', '256px', '138px', 'auto', 'auto'],
                             fill: ['rgba(240,26,26,1.00)']
                         }
                     ],
@@ -201,10 +208,10 @@
                 content: {
                     dom: [
                         {
-                            rect: ['0px', '0px', '270px', '138px', 'auto', 'auto'],
+                            type: 'rect',
                             id: 'Rectangle3',
                             stroke: [0, 'rgb(0, 0, 0)', 'none'],
-                            type: 'rect',
+                            rect: ['0px', '0px', '270px', '138px', 'auto', 'auto'],
                             fill: ['rgba(22,8,236,1.00)']
                         }
                     ],
@@ -273,18 +280,18 @@
                 content: {
                     dom: [
                         {
-                            type: 'rect',
+                            rect: ['0px', '0px', '165px', '38px', 'auto', 'auto'],
                             id: 'Rectangle2',
                             stroke: [0, 'rgba(0,0,0,1)', 'none'],
-                            rect: ['0px', '0px', '165px', '38px', 'auto', 'auto'],
+                            type: 'rect',
                             fill: ['rgba(179,156,0,1.00)']
                         },
                         {
-                            font: ['Arial, Helvetica, sans-serif', [24, ''], 'rgba(0,0,0,1)', 'normal', 'none', '', 'break-word', 'normal'],
+                            type: 'text',
                             id: 'Text',
                             text: '<p style=\"margin: 0px;\">​Soy un Botón</p>',
-                            type: 'text',
-                            rect: ['11px', '7px', '154px', '20px', 'auto', 'auto']
+                            rect: ['11px', '7px', '154px', '20px', 'auto', 'auto'],
+                            font: ['Arial, Helvetica, sans-serif', [24, ''], 'rgba(0,0,0,1)', 'normal', 'none', '', 'break-word', 'normal']
                         }
                     ],
                     style: {
@@ -298,6 +305,90 @@
                     autoPlay: false,
                     data: [
 
+                    ]
+                }
+            },
+            "TIMER_CONTAINER": {
+                version: "6.0.0",
+                minimumCompatibleVersion: "5.0.0",
+                build: "6.0.0.400",
+                scaleToFit: "none",
+                centerStage: "none",
+                resizeInstances: false,
+                content: {
+                    dom: [
+                        {
+                            rect: ['0px', '0px', '197px', '38px', 'auto', 'auto'],
+                            id: 'Rectangle2',
+                            stroke: [0, 'rgba(0,0,0,1)', 'none'],
+                            type: 'rect',
+                            fill: ['rgba(193,193,193,1.00)']
+                        },
+                        {
+                            rect: ['22px', '7px', '154px', '38px', 'auto', 'auto'],
+                            textStyle: ['', '', '', '', 'none'],
+                            font: ['Arial, Helvetica, sans-serif', [24, 'px'], 'rgba(0,0,0,1)', '400', 'none', 'normal', 'break-word', 'normal'],
+                            id: 'Text2',
+                            text: '<p style=\"margin: 0px;\">​TIMER</p>',
+                            align: 'center',
+                            type: 'text'
+                        }
+                    ],
+                    style: {
+                        '${symbolSelector}': {
+                            isStage: 'true',
+                            rect: [undefined, undefined, '197px', '38px']
+                        }
+                    }
+                },
+                timeline: {
+                    duration: 1000,
+                    autoPlay: false,
+                    labels: {
+                        "normal": 0,
+                        "10": 500
+                    },
+                    data: [
+                        [
+                            "eid32",
+                            "background-color",
+                            0,
+                            500,
+                            "linear",
+                            "${Rectangle2}",
+                            'rgba(193,193,193,1.00)',
+                            'rgba(255,0,0,1.00)'
+                        ],
+                        [
+                            "eid34",
+                            "background-color",
+                            500,
+                            500,
+                            "linear",
+                            "${Rectangle2}",
+                            'rgba(255,0,0,1)',
+                            'rgba(193,193,193,1.00)'
+                        ],
+                        [
+                            "eid41",
+                            "color",
+                            0,
+                            500,
+                            "linear",
+                            "${Text2}",
+                            'rgba(0,0,0,1)',
+                            'rgba(255,255,255,1.00)'
+                        ],
+                        [
+                            "eid42",
+                            "color",
+                            500,
+                            500,
+                            "linear",
+                            "${Text2}",
+                            'rgba(255,255,255,1.00)',
+                            'rgba(0,0,0,1)'
+                        ]
                     ]
                 }
             }

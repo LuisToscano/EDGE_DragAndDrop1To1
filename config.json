@@ -1,5 +1,6 @@
 {
     "num_intentos": 2,
+    "pregunta":"prueba de pregunta drag and drop",
     "tipo": "uno a uno",
     "drags": {
         "1": {
