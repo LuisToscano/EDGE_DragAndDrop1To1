@@ -1,46 +1,48 @@
 //********************************************************** EVENT LISTENERS START***************************************************************************
 
 //test de función controlador
+/*
+ parent.$(parent.document).on("EDGE_Plantilla_creationComplete", function (data) {
+ $("body").trigger({
+ type: "EDGE_Recurso_sendPreviousData",
+ block: false,
+ attempts: 0,
+ timer: {"timerObj": null, "remaining_time": null, "current_state": null},
+ previous_data: {"DROP_1_(Un cuadro azul)": [], "DROP_2_(Un cuadro rojo)": []},
+ sym: data.sym
+ });
+ });
+ 
+ parent.$(parent.document).on("EDGE_Plantilla_submitApplied", function (data) {
+ 
+ var this_block = false;
+ var this_show_answers = false;
+ 
+ var intentos = data.attempts + 1;
+ if (intentos >= data.attempts_limit) {
+ this_block = true;
+ this_show_answers = true;
+ }
+ 
+ $("body").trigger({
+ type: "EDGE_Recurso_postSubmitApplied",
+ block: this_block,
+ show_answers: this_show_answers,
+ attempts: intentos,
+ timer: {"timerObj": null, "reset_timer": null},
+ sym: data.sym
+ });
+ });
+ 
+ //*/
 
-parent.$(parent.document).on("EDGE_Plantilla_creationComplete", function (data) {
-    $("body").trigger({
-        type: "EDGE_Recurso_sendPreviousData",
-        block: false,
-        attempts: 0,
-        timer: {"timerObj": null, "remaining_time": null, "current_state": null},
-        previous_data: {"DROP_1_(Un cuadro azul)": [], "DROP_2_(Un cuadro rojo)": []},
-        sym: data.sym
-    });
-});
-
-    parent.$(parent.document).on("EDGE_Plantilla_submitApplied", function (data) {
-
-        var this_block = false;
-        var this_show_answers = false;
-
-        var intentos = data.attempts + 1;
-        if (intentos >= data.attempts_limit) {
-            this_block = true;
-            this_show_answers = true;
-        }
-
-        $("body").trigger({
-            type: "EDGE_Recurso_postSubmitApplied",
-            block: this_block,
-            show_answers: this_show_answers,
-            attempts: intentos,
-            timer: {"timerObj": null, "reset_timer": null},
-            sym: data.sym
-        });
-    });
-    
-    //***********************************************************************
+//***********************************************************************
 
 //Evento que se dispara después de que el controlador recibe y transforma los resultados de una interacción.
 
 $("body").on("EDGE_Recurso_postSubmitApplied", function (data) {
     var stage = $(data.sym.getComposition().getStage().ele);
-    
+
     if (data.show_answers) {
         switch (stage.prop("tipo")) {
             case "uno a uno":
@@ -60,17 +62,15 @@ $("body").on("EDGE_Recurso_postSubmitApplied", function (data) {
     if (data.block) {
         inhabilitarDragsYDrops(data.sym);
         stage.prop("blocked", true);
-        if(stage.prop("usa_timer")){
-            if(data.timer.timerObj!==null){
-                stopTimer(data.timer.timerObj);
+        if (stage.prop("usa_timer")) {
+            stopTimer(data.sym);
+        }
+    } else {
+        if (stage.prop("usa_timer")) {
+            if (data.timer.reset_timer) {
+                resetTimer(data.sym);
             }
         }
-    }else{
-        if(stage.prop("usa_timer")){
-            if(data.timer.timerObj!==null && data.timer.reset_timer){
-                resetTimer(data.sym, data.timer.timerObj);
-            }
-        } 
     }
     stage.prop("intentos_previos", data.attempts);
 
@@ -83,10 +83,10 @@ $("body").on("EDGE_Recurso_sendPreviousData", function (data) {
     if (data.block) {
         inhabilitarDragsYDrops(data.sym);
         stage.prop("blocked", true);
-        
-        if(stage.prop("usa_timer") && data.timer.timerObj!==null){
-            setHTMLTimer(data.timer.remaining_time, data.timer.timerObj);
-            cambiarEstadoTimer(data.sym, data.timer.timerObj, data.timer.current_state);
+
+        if (stage.prop("usa_timer")) {
+            setHTMLTimer(data.timer.remaining_time, data.sym);
+            cambiarEstadoTimer(data.sym, data.timer.current_state);
         }
     }
 
@@ -94,114 +94,6 @@ $("body").on("EDGE_Recurso_sendPreviousData", function (data) {
         stage.prop("intentos_previos", data.attempts);
     }
 });
-
-/*
- 
- $(document).on("EDGE_Plantilla_submitApplied", function (evt) {
- var temp_pagina = EDGE_Plantilla.recurso_on_show;
- 
- switch (EDGE_Plantilla.recurso_on_show.actividad) {
- case "drag_drop":
- drag_drop_toscano_submit(evt);
- break;
- case "drag_drop_many":
- drag_drop_toscano_submit(evt);
- break;
- }
- });
- 
- function drag_drop_toscano_submit(evt) {
- var sym = EDGE_Plantilla.plantilla_sym;
- var sym_contenedor = sym.getSymbol("contened_home");
- var is_empty = false;
- EDGE_Plantilla.debug ? console.log(evt) : false;
- 
- if (evt.attempts >= evt.attempts_limit) {
- return false;
- }
- 
- $.each(evt.answer, function (index, value) {
- //console.log(isEmpty(value));
- if (isEmpty(value)) {
- mostrar_popup("med_estrella");
- is_empty = true;
- return false;
- }
- });
- 
- if(is_empty){
- return false;
- }
- 
- var objEvt = {type: "EDGE_Recurso_postSubmitApplied", sym: evt.sym};
- 
- if (evt.results !== "incorrect") {
- mostrar_popup("muy_bien", {mensaje: "Tu drag and drop ha sido respondido correctamente"});
- 
- objEvt = merge_options(objEvt, {
- block: true,
- show_answers: false,
- attempts: evt.attempts
- });
- 
- } else {
- var this_block = false;
- var this_show_answers = false;
- 
- var intentos = evt.attempts + 1;
- if (intentos >= evt.attempts_limit) {
- this_block = true;
- this_show_answers = true;
- mostrar_popup("bronce");
- } else {
- mostrar_popup("plata");
- }
- 
- objEvt = merge_options(objEvt, {
- block: this_block,
- show_answers: this_show_answers,
- attempts: intentos
- });
- }
- 
- $('iframe', sym_contenedor.ele)[0].contentWindow.$('body').trigger(objEvt);
- }
- 
- $(document).on("EDGE_Plantilla_creationComplete", function (evt) {
- var temp_pagina = EDGE_Plantilla.recurso_on_show;
- 
- switch (EDGE_Plantilla.recurso_on_show.actividad) {
- case "drag_drop":
- drag_drop_toscano_created(evt);
- break;
- case "drag_drop_many":
- drag_drop_toscano_created(evt);
- break;
- }
- });
- 
- function drag_drop_toscano_created(evt) {
- var sym = EDGE_Plantilla.plantilla_sym;
- var sym_contenedor = sym.getSymbol("contened_home");
- 
- EDGE_Plantilla.debug ? console.log(evt) : false;
- EDGE_Plantilla.debug ? console.log($('iframe', sym_contenedor.ele)[0], sym_contenedor) : false;
- 
- // previous_data debe ser interpretado del scorm
- $('iframe', sym_contenedor.ele)[0].contentWindow.$('body').trigger({
- type: "EDGE_Recurso_sendPreviousData",
- block: false,
- previous_data: {
- "DROP_1_(Un cuadro azul)": ["DRAG_2_(bola verde)"],
- "DROP_2_(Un cuadro rojo)": ["DRAG_1_(bola rosada)"]
- },
- attempts: 0,
- sym: evt.sym,
- identify: EDGE_Plantilla.recurso_on_show
- });
- }
- 
- */
 //********************************************************** EVENT LISTENERS END***************************************************************************
 
 
@@ -248,7 +140,7 @@ function inicializarDragAndDrop(sym) {
                 break;
             }
         }
-        
+
         stage.prop("usa_timer", typeof startTimer == 'function');
         enviarEventoActividadTerminada(sym);
     });
@@ -446,17 +338,17 @@ function checkAnswersDragAndDrop(sym) {
         }
 
         var timer = {};
-        if(stage.prop("usa_timer")){
-            timer.timerObj = stage.prop("timer");
-            timer.remaining_time = timer.timerObj.prop("segundos_restantes");
-            timer.current_state = timer.timerObj.prop("alertState");
-        }else{
-            timer.timerObj = null;
+        if (stage.prop("usa_timer")) {
+            var timerObj = buscar_sym(sym, stage.prop("timer"), true);
+            timer.remaining_time = timerObj.prop("segundos_restantes");
+            timer.current_state = timerObj.prop("alertState");
+        } else {
+            //timer.timerObj = null;
             timer.remaining_time = null;
             timer.current_state = null;
         }
-        timer.time_out = false;
-        
+        //timer.time_out = false;
+
         if (answerCorrect) {
             enviarEventoInteraccion(stage.prop("interaction_type"), stage.prop("pregunta"), objRespuesta, "correct", stage.prop("intentos_previos"), stage.prop("num_intentos"), timer, sym);
         }

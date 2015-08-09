@@ -21,7 +21,8 @@
             js+"jquery-ui-1.10.4.custom.min.js",
             js+"dragAndDropUtilities.js",
             js+"interactionUtilities.js",
-            js+"timerUtilities.js"
+            js+"timerUtilities.js",
+            js+"utility.js"
         ],
         symbols = {
             "stage": {

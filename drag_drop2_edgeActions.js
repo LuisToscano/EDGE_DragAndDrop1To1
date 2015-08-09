@@ -15,7 +15,7 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
       
       Symbol.bindSymbolAction(compId, symbolName, "creationComplete", function(sym, e) {
          // Insertar código para ejecutarse cuando el símbolo se crea aquí
-         inicializarTimer(sym, "TIMER_CONTAINER");
+         inicializarTimer(sym);
          inicializarDragAndDrop(sym);
 
       });
@@ -30,14 +30,16 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
 
       Symbol.bindElementAction(compId, symbolName, "${DRAG_1}", "click", function(sym, e) {
          // introducir aquí código para clic de ratón
-         startTimer(sym, "TIMER_CONTAINER");
+         var stage = $(sym.getComposition().getStage().ele);
+         startTimer(sym, buscar_sym(sym, stage.prop("timer"),true));
 
       });
       //Edge binding end
 
       Symbol.bindElementAction(compId, symbolName, "${DRAG_2}", "click", function(sym, e) {
          // introducir aquí código para clic de ratón
-         startTimer(sym, "TIMER_CONTAINER");
+         var stage = $(sym.getComposition().getStage().ele);
+         startTimer(sym, buscar_sym(sym, stage.prop("timer"),true));
 
       });
       //Edge binding end
