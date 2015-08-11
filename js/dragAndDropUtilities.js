@@ -142,7 +142,7 @@ function inicializarDragAndDrop(sym) {
         }
 
         stage.prop("usa_timer", typeof startTimer == 'function');
-        enviarEventoActividadTerminada(sym);
+        //enviarEventoActividadTerminada(sym);
     });
 }
 
@@ -621,3 +621,8 @@ function aplicarCambiosPreviosDragAndDrop(dataObj, sym) {
     });
 }
 
+function inicializar(sym){
+    function inicializar(sym){
+    inicializarDragAndDrop(sym);
+}(sym);
+}
