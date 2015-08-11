@@ -226,7 +226,7 @@ function inicializarDragAndDropUnoaUno(sym)
                 //Establece la propiedad correct dependiendo de si el objeto soltado corresponde a la respuesta.
 
                 var dragObjName = dropObj.prop("current_drag").prop("nombre");
-                if (nombreANumero(dropObjName) == nombreANumero(dragObjName)) {
+                if (nombreANumero(dropObjName) === nombreANumero(dragObjName)) {
                     dropObj.prop("correct", true);
                 }
                 else {
@@ -331,7 +331,28 @@ function inicializarDragAndDropUnoaMuchos(sym)
                 var dropObj = $(this);
                 var dragObj = $(ui.draggable);
                 if (dropObj.prop("current_drags").hasOwnProperty(dragObj.prop("nombre"))) {
-                    delete dropObj.prop("current_drags")[dragObj.prop("nombre")];
+                
+                delete dropObj.prop("current_drags")[dragObj.prop("nombre")];
+                    
+                var solutionArray = stage.prop("drops")[nombreANumero(dropObj.prop("nombre"))].accepted;
+
+                var cont = 0;
+                $.each(dropObj.prop("current_drags"), function (key, val) {
+                    cont++;
+                });
+
+                var correct = true;
+                if (solutionArray.length === cont) {
+                    $.each(dropObj.prop("current_drags"), function (key, val) {
+                        if ($.inArray(nombreANumero(key), solutionArray) < 0) {
+                            correct = false;
+                            return false;
+                        }
+                    });
+                } else {
+                    correct = false;
+                }
+                dropObj.prop("correct", correct);
                 }
             }
         });
