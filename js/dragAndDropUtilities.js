@@ -166,7 +166,23 @@ function inicializarDragAndDropUnoaUno(sym)
         sym.$('DRAG_' + i).prop("nombre", "DRAG_" + i);
         sym.$('DRAG_' + i).prop("descripcion", stage.prop("drags")[i].descripcion);
         sym.$('DRAG_' + i).prop("posicion_inicial", sym.$('DRAG_' + i).position());
-        sym.$('DRAG_' + i).draggable();
+        sym.$('DRAG_' + i).draggable({
+            stop: function (event, ui) {
+                    var returnToOrigin = true;
+                    for(var j=1; j<=CANTIDAD_DROPS; j++){
+                        var dropObj = sym.$("DROP_"+j);
+                        if(dropObj.prop("current_drag")!== null && dropObj.prop("current_drag").prop("nombre") == $(this).prop("nombre")){
+                            returnToOrigin = false;
+                            break;
+                        }
+                    } 
+                    
+                    if(returnToOrigin){
+                        var position = $(this).prop("posicion_inicial");
+                        moverDrag($(this), position);
+                    }
+            }
+        });
     }
 
     //***********************************************************************
@@ -244,7 +260,23 @@ function inicializarDragAndDropUnoaMuchos(sym)
         sym.$('DRAG_' + i).prop("nombre", "DRAG_" + i);
         sym.$('DRAG_' + i).prop("descripcion", stage.prop("drags")[i].descripcion);
         sym.$('DRAG_' + i).prop("posicion_inicial", sym.$('DRAG_' + i).position());
-        sym.$('DRAG_' + i).draggable();
+        sym.$('DRAG_' + i).draggable({
+            stop: function (event, ui) {
+                    var returnToOrigin = true;
+                    for(var j=1; j<=CANTIDAD_DROPS; j++){
+                        var dropObj = sym.$("DROP_"+j);
+                        if(dropObj.prop("current_drags")!== null && dropObj.prop("current_drags").hasOwnProperty($(this).prop("nombre"))){
+                            returnToOrigin = false;
+                            break;
+                        }
+                    } 
+                    
+                    if(returnToOrigin){
+                        var position = $(this).prop("posicion_inicial");
+                        moverDrag($(this), position);
+                    }
+            }
+        });
     }
 
     //***********************************************************************

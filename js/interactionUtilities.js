@@ -47,6 +47,5 @@ function buscar_sym(sym, arrSymSearch, boolJQUERY) {
 }
 
 $("body").on("EDGE_Recurso_Submit", function (evt) {
-    console.log("SUBMIT OBLIGADO");
-    //checkAnswersPickMany(evt.sym);
+    checkAnswersDragAndDrop(evt.sym);
 });
