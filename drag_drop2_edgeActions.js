@@ -16,7 +16,7 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // los alias más comu
       Symbol.bindSymbolAction(compId, symbolName, "creationComplete", function(sym, e) {
          // Insertar código para ejecutarse cuando el símbolo se crea aquí
          inicializarTimer(sym);
-         inicializarDragAndDrop(sym);
+         inicializar(sym); //Esto es solo para PRUEBAS, BORRAR AL ENTREGAR A INTEGRACIÓN
 
       });
       //Edge binding end
