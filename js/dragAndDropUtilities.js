@@ -1,6 +1,6 @@
 //********************************************************** EVENT LISTENERS START***************************************************************************
 
-//test de función controlador
+//test de funciÃ³n controlador
 /*
  parent.$(parent.document).on("EDGE_Plantilla_creationComplete", function (data) {
  $("body").trigger({
@@ -38,7 +38,7 @@
 
 //***********************************************************************
 
-//Evento que se dispara después de que el controlador recibe y transforma los resultados de una interacción.
+//Evento que se dispara despuÃ©s de que el controlador recibe y transforma los resultados de una interacciÃ³n.
 
 $("body").on("EDGE_Recurso_postSubmitApplied", function (data) {
     var stage = $(data.sym.getComposition().getStage().ele);
@@ -77,6 +77,7 @@ $("body").on("EDGE_Recurso_postSubmitApplied", function (data) {
 });
 
 $("body").on("EDGE_Recurso_sendPreviousData", function (data) {
+    inicializarDragAndDrop(data.sym);
     var stage = $(data.sym.getComposition().getStage().ele);
     aplicarCambiosPreviosDragAndDrop(data.previous_data, data.sym);
 
@@ -102,11 +103,14 @@ $("body").on("EDGE_Recurso_sendPreviousData", function (data) {
 //Inicializa una actividad drag and drop
 
 function inicializarDragAndDrop(sym) {
-
     var stage = $(sym.getComposition().getStage().ele);
     stage.prop("interaction_type", "matching");
     stage.prop("intentos_previos", 0);
     stage.prop("blocked", false);
+
+    $.ajaxSetup({
+        async: false
+    });
 
     $.getJSON("config.json", function (data) {
         $.each(data, function (key, val) {
@@ -148,7 +152,7 @@ function inicializarDragAndDrop(sym) {
 
 //***********************************************************************
 
-//función inicializadora de Drag And Drop Uno a Uno	
+//funciÃ³n inicializadora de Drag And Drop Uno a Uno	
 
 function inicializarDragAndDropUnoaUno(sym)
 {
@@ -168,19 +172,19 @@ function inicializarDragAndDropUnoaUno(sym)
         sym.$('DRAG_' + i).prop("posicion_inicial", sym.$('DRAG_' + i).position());
         sym.$('DRAG_' + i).draggable({
             stop: function (event, ui) {
-                    var returnToOrigin = true;
-                    for(var j=1; j<=CANTIDAD_DROPS; j++){
-                        var dropObj = sym.$("DROP_"+j);
-                        if(dropObj.prop("current_drag")!== null && dropObj.prop("current_drag").prop("nombre") == $(this).prop("nombre")){
-                            returnToOrigin = false;
-                            break;
-                        }
-                    } 
-                    
-                    if(returnToOrigin){
-                        var position = $(this).prop("posicion_inicial");
-                        moverDrag($(this), position);
+                var returnToOrigin = true;
+                for (var j = 1; j <= CANTIDAD_DROPS; j++) {
+                    var dropObj = sym.$("DROP_" + j);
+                    if (dropObj.prop("current_drag") !== null && dropObj.prop("current_drag").prop("nombre") == $(this).prop("nombre")) {
+                        returnToOrigin = false;
+                        break;
                     }
+                }
+
+                if (returnToOrigin) {
+                    var position = $(this).prop("posicion_inicial");
+                    moverDrag($(this), position);
+                }
             }
         });
     }
@@ -205,7 +209,7 @@ function inicializarDragAndDropUnoaUno(sym)
                 var dropObjName = dropObj.prop("nombre");
                 var dragObj = dropObj.prop("current_drag");
 
-                //actualiza propiedad current_drag del objeto drop con el nuevo elemento drag soltado sobre él
+                //actualiza propiedad current_drag del objeto drop con el nuevo elemento drag soltado sobre Ã©l
 
                 if (dragObj == null)
                 {
@@ -242,7 +246,7 @@ function inicializarDragAndDropUnoaUno(sym)
 
 //***********************************************************************
 
-//función inicializadora de Drag And Drop Uno a Uno	
+//funciÃ³n inicializadora de Drag And Drop Uno a Uno	
 
 function inicializarDragAndDropUnoaMuchos(sym)
 {
@@ -262,19 +266,19 @@ function inicializarDragAndDropUnoaMuchos(sym)
         sym.$('DRAG_' + i).prop("posicion_inicial", sym.$('DRAG_' + i).position());
         sym.$('DRAG_' + i).draggable({
             stop: function (event, ui) {
-                    var returnToOrigin = true;
-                    for(var j=1; j<=CANTIDAD_DROPS; j++){
-                        var dropObj = sym.$("DROP_"+j);
-                        if(dropObj.prop("current_drags")!== null && dropObj.prop("current_drags").hasOwnProperty($(this).prop("nombre"))){
-                            returnToOrigin = false;
-                            break;
-                        }
-                    } 
-                    
-                    if(returnToOrigin){
-                        var position = $(this).prop("posicion_inicial");
-                        moverDrag($(this), position);
+                var returnToOrigin = true;
+                for (var j = 1; j <= CANTIDAD_DROPS; j++) {
+                    var dropObj = sym.$("DROP_" + j);
+                    if (dropObj.prop("current_drags") !== null && dropObj.prop("current_drags").hasOwnProperty($(this).prop("nombre"))) {
+                        returnToOrigin = false;
+                        break;
                     }
+                }
+
+                if (returnToOrigin) {
+                    var position = $(this).prop("posicion_inicial");
+                    moverDrag($(this), position);
+                }
             }
         });
     }
@@ -335,7 +339,7 @@ function inicializarDragAndDropUnoaMuchos(sym)
 
 //***********************************************************************
 
-//revisa la propiedad correct de todos los drops para verificar si la respuesta es correcta y ejecuta una acción
+//revisa la propiedad correct de todos los drops para verificar si la respuesta es correcta y ejecuta una acciÃ³n
 function checkAnswersDragAndDrop(sym) {
 
     var stage = $(sym.getComposition().getStage().ele);
@@ -413,11 +417,14 @@ function mostrarRespuestasDragAndDropUnoAMuchos(sym) {
     var stage = $(sym.getComposition().getStage().ele);
     var dropsObj = stage.prop("drops");
 
+    //console.log(dropsObj);
+
     $.each(dropsObj, function (key, val) {
         var arrayDrags = [];
         $.each(val.accepted, function (keys, values) {
             arrayDrags.push(sym.$('DRAG_' + values));
         });
+        //console.log(arrayDrags);
         ubicarDragsEnDrop(arrayDrags, sym.$('DROP_' + key));
     });
 }
@@ -500,11 +507,11 @@ function moverDrag(dragObj, position) {
 
 //***********************************************************************
 
-//Ubica un drag en el centro de un drop pasados como parámetros.
+//Ubica un drag en el centro de un drop pasados como parÃ¡metros.
 
 function ubicarDragEnCentroDeDrop(drag, drop) {
 
-    var dropPosition = drop.position();
+    var dropPosition = drop.offset();
 
     var dragWidth = drag.width();
     var dragHeight = drag.height();
@@ -513,38 +520,42 @@ function ubicarDragEnCentroDeDrop(drag, drop) {
     var dropHeight = drop.height();
 
     var newposition = {top: ((dropPosition.top + (dropHeight / 2)) - (dragHeight / 2)), left: ((dropPosition.left + (dropWidth / 2)) - (dragWidth / 2))};
+
     moverDrag(drag, newposition);
 
 }
 
 //***********************************************************************
 
-//Ubica un drag en el centro de un drop pasados como parámetros.
+//Ubica un drag en el centro de un drop pasados como parÃ¡metros.
 
 function ubicarDragsEnDrop(drags, drop) {
-    var dropPosition = drop.position();
+    var dropPosition = drop.offset();
     var dropWidth = drop.width();
     var dropHeight = drop.height();
 
     var currentTop = dropPosition.top;
     var currentLeft = dropPosition.left;
 
-    for (var i = 0; i < drags.length; i++) {
-        if ((currentLeft + drags[i].width()) > (dropPosition.left + dropWidth))
+    //for (var i = 0; i < drags.length; i++) {
+    $.each(drags, function (key, value) {
+        if ((currentLeft + $(value[0]).width()) > (dropPosition.left + dropWidth))
         {
-            currentTop += drags[i].height;
+            currentTop += $(value[0]).height();
             currentLeft = dropPosition.left;
-        } else {
-            var newposition = {top: currentTop, left: currentLeft};
-            moverDrag(drags[i], newposition);
-            currentLeft += drags[i].width();
         }
-    }
+
+        var newposition = {top: currentTop, left: currentLeft};
+        moverDrag(value, newposition);
+        currentLeft += $(value[0]).width();
+    });
+
+    //}
 }
 
 //***********************************************************************
 
-//retorna la parte numérica del nombre de un elemento
+//retorna la parte numÃ©rica del nombre de un elemento
 // ej: DROP_1 -> 1
 
 function nombreANumero(strNombre) {
@@ -621,8 +632,6 @@ function aplicarCambiosPreviosDragAndDrop(dataObj, sym) {
     });
 }
 
-function inicializar(sym){
-    function inicializar(sym){
+function inicializar(sym) {
     inicializarDragAndDrop(sym);
-}(sym);
 }
