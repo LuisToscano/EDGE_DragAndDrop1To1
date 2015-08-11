@@ -621,3 +621,6 @@ function aplicarCambiosPreviosDragAndDrop(dataObj, sym) {
     });
 }
 
+function inicializar(sym){
+    inicializarDragAndDrop(sym);
+}
