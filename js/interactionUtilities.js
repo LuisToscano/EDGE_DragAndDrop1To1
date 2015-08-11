@@ -6,6 +6,7 @@ function enviarEventoActividadTerminada(sym) {
 }
 
 function enviarEventoInteraccion(tipo, pregunta, respuesta, resultado, intentos_previos, limite_intentos, timerObj, sym) {
+    var stage = $(sym.getComposition().getStage().ele);
     parent.$(parent.document).trigger({
         type: "EDGE_Plantilla_submitApplied",
         interactionType: tipo,
@@ -15,7 +16,8 @@ function enviarEventoInteraccion(tipo, pregunta, respuesta, resultado, intentos_
         attempts: intentos_previos,
         attempts_limit: limite_intentos,
         timer: timerObj,
-        sym: sym
+        sym: sym,
+        identify: stage.prop("ed_identify")
     });
 }
 
