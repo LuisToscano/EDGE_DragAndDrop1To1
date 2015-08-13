@@ -222,6 +222,8 @@ function inicializarDragAndDropUnoaUno(sym)
                         dropObj.prop("current_drag", $(ui.draggable));
                     }
                 }
+                
+                ubicarDragEnCentroDeDrop($(ui.draggable), dropObj);
 
                 //Establece la propiedad correct dependiendo de si el objeto soltado corresponde a la respuesta.
 
@@ -312,6 +314,8 @@ function inicializarDragAndDropUnoaMuchos(sym)
                 $.each(dropObj.prop("current_drags"), function (key, val) {
                     cont++;
                 });
+                
+                ubicarDragEnBordes(dragObj, dropObj);
 
                 var correct = true;
                 if (solutionArray.length == cont) {
@@ -534,7 +538,7 @@ function moverDrag(dragObj, position) {
 
 function ubicarDragEnCentroDeDrop(drag, drop) {
 
-    var dropPosition = drop.offset();
+    var dropPosition = drop.position();
 
     var dragWidth = drag.width();
     var dragHeight = drag.height();
@@ -556,24 +560,63 @@ function ubicarDragsEnDrop(drags, drop) {
     var dropPosition = drop.offset();
     var dropWidth = drop.width();
     var dropHeight = drop.height();
+    var margen = 10;
 
-    var currentTop = dropPosition.top;
-    var currentLeft = dropPosition.left;
+    var currentTop = dropPosition.top + margen;
+    var currentLeft = dropPosition.left + margen;
 
     //for (var i = 0; i < drags.length; i++) {
     $.each(drags, function (key, value) {
         if ((currentLeft + $(value[0]).width()) > (dropPosition.left + dropWidth))
         {
-            currentTop += $(value[0]).height();
-            currentLeft = dropPosition.left;
+            currentTop += ($(value[0]).height() + (margen*2));
+            console.log($(value[0]).height());
+            currentLeft = dropPosition.left + margen;
         }
 
         var newposition = {top: currentTop, left: currentLeft};
         moverDrag(value, newposition);
-        currentLeft += $(value[0]).width();
+        currentLeft += $(value[0]).width() + margen;
     });
 
     //}
+}
+
+//***********************************************************************
+
+//Ubica un drag en el centro de un drop pasados como parÃ¡metros.
+
+function ubicarDragEnBordes(drag, drop) {
+    var dropPosition = drop.offset();
+    var dragPosition = drag.offset();
+
+    var dragWidth = drag.width();
+    var dragHeight = drag.height();
+
+    var dropWidth = drop.width();
+    var dropHeight = drop.height();
+
+    var newposition = {top: dragPosition.top, left: dragPosition.left};
+    
+    if(dragPosition.left < dropPosition.left){
+        newposition.left = dropPosition.left;
+    }
+    
+    if((dragPosition.left+dragWidth) > (dropPosition.left + dropWidth)){
+        newposition.left = (dropPosition.left + dropWidth) - dragWidth;
+    }
+    
+    if(dragPosition.top < dropPosition.top){
+        newposition.top = dropPosition.top;
+    }
+    
+    if((dragPosition.top+dragHeight) > (dropPosition.top + dropHeight)){
+        newposition.top = (dropPosition.top + dropHeight) - dragHeight;
+    }
+
+    if(newposition.top !== drag.prop("posicion_inicial").top || newposition.left !== drag.prop("posicion_inicial").left ){
+        moverDrag(drag, newposition);
+    }
 }
 
 //***********************************************************************
