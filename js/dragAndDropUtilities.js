@@ -597,21 +597,22 @@ function ubicarDragEnBordes(drag, drop) {
     var dropHeight = drop.height();
 
     var newposition = {top: dragPosition.top, left: dragPosition.left};
+    var margen = 10;
     
     if(dragPosition.left < dropPosition.left){
-        newposition.left = dropPosition.left;
+        newposition.left = dropPosition.left + margen;
     }
     
     if((dragPosition.left+dragWidth) > (dropPosition.left + dropWidth)){
-        newposition.left = (dropPosition.left + dropWidth) - dragWidth;
+        newposition.left = (dropPosition.left + dropWidth) - dragWidth - margen;
     }
     
     if(dragPosition.top < dropPosition.top){
-        newposition.top = dropPosition.top;
+        newposition.top = dropPosition.top + margen;
     }
     
     if((dragPosition.top+dragHeight) > (dropPosition.top + dropHeight)){
-        newposition.top = (dropPosition.top + dropHeight) - dragHeight;
+        newposition.top = (dropPosition.top + dropHeight) - dragHeight - (margen*2);
     }
 
     if(newposition.top !== drag.prop("posicion_inicial").top || newposition.left !== drag.prop("posicion_inicial").left ){
