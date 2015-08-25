@@ -429,6 +429,12 @@ function checkAnswersDragAndDrop(sym) {
 function mostrarRespuestasDragAndDropUnoAUno(sym) {
     var stage = $(sym.getComposition().getStage().ele);
     var CANTIDAD_DROPS = stage.prop("cantidad_drops");
+    var CANTIDAD_DRAGS = stage.prop("cantidad_drags");
+    
+    for (var i = 1; i <= CANTIDAD_DRAGS; i++) {
+        var newposition = sym.$('DRAG_' + i).prop("posicion_inicial");
+        moverDrag(sym.$('DRAG_' + i), newposition);
+    }
 
     for (var i = 1; i <= CANTIDAD_DROPS; i++) {
         ubicarDragEnCentroDeDrop(sym.$('DRAG_' + i), sym.$('DROP_' + i));
@@ -445,6 +451,11 @@ function mostrarRespuestasDragAndDropUnoAMuchos(sym) {
     var dropsObj = stage.prop("drops");
 
     //console.log(dropsObj);
+    
+    for (var i = 1; i <= stage.prop("cantidad_drags"); i++) {
+        var newposition = sym.$('DRAG_' + i).prop("posicion_inicial");
+        moverDrag(sym.$('DRAG_' + i), newposition);
+    }
 
     $.each(dropsObj, function (key, val) {
         var arrayDrags = [];
@@ -587,8 +598,8 @@ function ubicarDragsEnDrop(drags, drop) {
 //Ubica un drag en el centro de un drop pasados como parÃ¡metros.
 
 function ubicarDragEnBordes(drag, drop) {
-    var dropPosition = drop.offset();
-    var dragPosition = drag.offset();
+    var dropPosition = drop.position();
+    var dragPosition = drag.position();
 
     var dragWidth = drag.width();
     var dragHeight = drag.height();
@@ -597,7 +608,7 @@ function ubicarDragEnBordes(drag, drop) {
     var dropHeight = drop.height();
 
     var newposition = {top: dragPosition.top, left: dragPosition.left};
-    var margen = 10;
+    var margen = 5;
     
     if(dragPosition.left < dropPosition.left){
         newposition.left = dropPosition.left + margen;
@@ -702,3 +713,32 @@ function aplicarCambiosPreviosDragAndDrop(dataObj, sym) {
 function inicializar(sym) {
     inicializarDragAndDrop(sym);
 }
+
+//drag and drop móviles
+
+!function (a) {
+    function f(a, b) {
+        if (!(a.originalEvent.touches.length > 1)) {
+            a.preventDefault();
+            var c = a.originalEvent.changedTouches[0], d = document.createEvent("MouseEvents");
+            d.initMouseEvent(b, !0, !0, window, 1, c.screenX, c.screenY, c.clientX, c.clientY, !1, !1, !1, !1, 0, null), a.target.dispatchEvent(d)
+        }
+    }
+    if (a.support.touch = "ontouchend"in document, a.support.touch) {
+        var e, b = a.ui.mouse.prototype, c = b._mouseInit, d = b._mouseDestroy;
+        b._touchStart = function (a) {
+            var b = this;
+            !e && b._mouseCapture(a.originalEvent.changedTouches[0]) && (e = !0, b._touchMoved = !1, f(a, "mouseover"), f(a, "mousemove"), f(a, "mousedown"))
+        }, b._touchMove = function (a) {
+            e && (this._touchMoved = !0, f(a, "mousemove"))
+        }, b._touchEnd = function (a) {
+            e && (f(a, "mouseup"), f(a, "mouseout"), this._touchMoved || f(a, "click"), e = !1)
+        }, b._mouseInit = function () {
+            var b = this;
+            b.element.bind({touchstart: a.proxy(b, "_touchStart"), touchmove: a.proxy(b, "_touchMove"), touchend: a.proxy(b, "_touchEnd")}), c.call(b)
+        }, b._mouseDestroy = function () {
+            var b = this;
+            b.element.unbind({touchstart: a.proxy(b, "_touchStart"), touchmove: a.proxy(b, "_touchMove"), touchend: a.proxy(b, "_touchEnd")}), d.call(b)
+        }
+    }
+}(jQuery);
